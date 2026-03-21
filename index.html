@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oliver Holdsworth — Videographer · Photographer · 3D Artist</title>
+<meta name="description" content="Auckland-based videographer, photographer and 3D artist. Story-driven content for brands, businesses and individuals.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #080706;
+  --white: #ede8e0;
+  --accent: #c8552a;
+  --accent2: #e8714a;
+  --muted: rgba(237,232,224,0.5);
+  --dim: rgba(237,232,224,0.22);
+  --border: rgba(237,232,224,0.08);
+  --sans: 'Syne', sans-serif;
+  --serif: 'Cormorant Garamond', serif;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 400;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Film grain — baked into the page */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9990;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.055'/%3E%3C/svg%3E");
+  pointer-events: none; mix-blend-mode: overlay;
+}
+
+/* ── CURSOR ── */
+#cur { position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s; } #cur-DUMMY {
+  position: fixed; width: 8px; height: 8px;
+  background: var(--accent); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform .15s, width .3s, height .3s;
+}
+#cur-ring {
+  position: fixed; width: 36px; height: 36px;
+  border: 1px solid rgba(200,85,42,0.4);
+  border-radius: 50%; pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 28px 56px;
+  mix-blend-mode: difference;
+}
+.nav-logo {
+  font-family: var(--sans); font-size: 13px; font-weight: 700;
+  color: var(--white); text-decoration: none;
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 40px; align-items: center; }
+.nav-links a {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--white); text-decoration: none; opacity: 0.6;
+  transition: opacity .2s;
+}
+.nav-links a:hover { opacity: 1; }
+.nav-cta {
+  opacity: 1 !important;
+  padding: 9px 20px;
+  border: 1px solid rgba(237,232,224,0.5);
+  transition: background .3s !important;
+}
+.nav-cta:hover { background: var(--white); color: var(--black) !important; }
+
+/* ── HERO ── */
+.hero {
+  position: relative; height: 100vh; overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+
+/* Background image with pixelation/glitch effect — like your original */
+.hero-img {
+  position: absolute; inset: 0;
+  background: var(--black);
+}
+.hero-img img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(30%) contrast(1.1) brightness(0.55);
+}
+/* Pixelation layer — mirrors your original site's effect */
+.hero-img .pixel-layer {
+  position: absolute; inset: 0;
+  background: inherit;
+  image-rendering: pixelated;
+  filter: grayscale(30%) contrast(1.1) brightness(0.55);
+  opacity: 0;
+  animation: pixelFade 6s ease-in-out infinite alternate;
+}
+@keyframes pixelFade {
+  0%, 60% { opacity: 0; }
+  80%, 100% { opacity: 0.35; transform: scale(1.002); }
+}
+
+/* Dark gradient overlay */
+.hero-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to top, rgba(8,7,6,0.96) 0%, rgba(8,7,6,0.15) 50%, rgba(8,7,6,0.5) 100%),
+    linear-gradient(to right, rgba(8,7,6,0.4) 0%, transparent 60%);
+}
+
+/* Horizontal scan lines */
+.hero-scan {
+  position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(8,7,6,0.15) 3px, rgba(8,7,6,0.15) 4px
+  );
+}
+
+/* MASSIVE title — like your original */
+.hero-content {
+  position: relative; z-index: 2;
+  width: 100%; padding: 0 56px 64px;
+}
+
+.hero-tag {
+  font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; animation: fadeUp .5s .1s forwards;
+}
+.hero-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+
+.hero-title {
+  font-family: var(--sans);
+  font-size: clamp(56px, 9vw, 118px);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  opacity: 0; animation: fadeUp .6s .2s forwards;
+}
+/* Second line in serif italic — contrast from original */
+.hero-title .serif-line {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.9em;
+  color: var(--muted);
+  letter-spacing: 0em;
+  text-transform: none;
+  margin-top: -0.05em;
+}
+
+.hero-bottom {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-top: 28px;
+  opacity: 0; animation: fadeUp .6s .4s forwards;
+}
+.hero-sub {
+  font-size: 13px; color: var(--muted); line-height: 1.7;
+  max-width: 300px; font-weight: 400;
+}
+.hero-meta {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+}
+.hero-meta-line {
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--dim);
+}
+.hero-meta-line span { color: var(--accent); }
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute; right: 56px; bottom: 64px; z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: fadeUp .6s .6s forwards;
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+.hero-scroll span {
+  font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--dim);
+}
+
+/* ── MARQUEE TICKER — loud, like motion portfolio sites ── */
+.ticker {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden; padding: 14px 0;
+  background: var(--black);
+}
+.ticker-inner {
+  display: flex; gap: 0;
+  animation: ticker 20s linear infinite;
+  white-space: nowrap;
+}
+.ticker-item {
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--dim); padding: 0 32px; flex-shrink: 0;
+}
+.ticker-item span { color: var(--accent); margin: 0 16px; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── BIO ── */
+.bio {
+  padding: 96px 56px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+.bio-sup {
+  font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.bio-sup::after { content: ''; flex: 1; max-width: 32px; height: 1px; background: rgba(200,85,42,0.3); }
+.bio-h {
+  font-family: var(--sans);
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 700; line-height: 1.05;
+  text-transform: uppercase; letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.bio-h-sub {
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 300; font-style: italic;
+  color: var(--muted); line-height: 1.1;
+  margin-bottom: 28px;
+}
+.bio-body { font-size: 14px; color: var(--muted); line-height: 1.85; margin-bottom: 36px; }
+.bio-body p + p { margin-top: 1em; }
+.bio-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.bio-tag {
+  font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 7px 14px; border: 1px solid var(--border); color: var(--dim);
+  transition: border-color .3s, color .3s;
+}
+.bio-tag:hover { border-color: rgba(200,85,42,0.5); color: var(--accent); }
+
+/* Image treatment — bold offset like original */
+.bio-right { position: relative; }
+.bio-right::before {
+  content: '';
+  position: absolute; top: 20px; right: -20px;
+  width: 100%; height: 100%;
+  border: 1px solid rgba(200,85,42,0.15); z-index: 0;
+}
+/* Large name watermark behind image */
+.bio-right::after {
+  content: 'OH';
+  position: absolute; bottom: -32px; left: -16px;
+  font-family: var(--sans); font-size: 140px; font-weight: 800;
+  letter-spacing: -0.05em; text-transform: uppercase;
+  color: rgba(200,85,42,0.06); z-index: 0; line-height: 1;
+  pointer-events: none;
+}
+.bio-img {
+  position: relative; z-index: 1;
+  aspect-ratio: 3/4; overflow: hidden; background: #1a1612;
+  display: flex; align-items: center; justify-content: center;
+}
+.bio-img img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05); transition: transform .7s; }
+.bio-img:hover img { transform: scale(1.04); }
+/* Accent line at bottom of image */
+.bio-img::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: linear-gradient(to right, var(--accent), transparent);
+}
+
+/* ── SERVICES ── */
+.services {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border-bottom: 1px solid var(--border);
+}
+.svc {
+  padding: 44px 52px; border-right: 1px solid var(--border);
+  position: relative; overflow: hidden; transition: background .4s;
+}
+.svc:last-child { border-right: none; }
+.svc::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px; background: var(--accent);
+  transition: width .5s ease;
+}
+.svc:hover::after { width: 100%; }
+.svc:hover { background: rgba(200,85,42,0.04); }
+.svc-n {
+  font-size: 9px; letter-spacing: 0.22em; color: var(--accent);
+  opacity: 0.5; margin-bottom: 16px;
+}
+.svc-t {
+  font-family: var(--sans); font-size: 18px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: -0.01em;
+  color: var(--white); margin-bottom: 12px;
+}
+.svc-d { font-size: 13px; color: var(--muted); line-height: 1.7; font-weight: 400; }
+
+/* ── WORK SECTION HEADER ── */
+.work { padding-bottom: 88px; }
+.work-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 72px 56px 24px;
+  border-top: 1px solid var(--border);
+}
+.work-head-l { display: flex; align-items: baseline; gap: 16px; }
+.work-head-t {
+  font-family: var(--sans); font-size: clamp(28px, 3vw, 40px);
+  font-weight: 800; text-transform: uppercase;
+  letter-spacing: -0.02em; color: var(--white);
+}
+.work-head-c { font-size: 10px; letter-spacing: 0.15em; color: var(--dim); text-transform: uppercase; }
+.work-head-y { font-size: 10px; letter-spacing: 0.15em; color: var(--dim); }
+
+/* ── PROJECT GRID ── */
+.wg { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; padding: 0 56px; }
+.wg.two { grid-template-columns: repeat(2,1fr); }
+.card {
+  position: relative; overflow: hidden; aspect-ratio: 16/9;
+  background: #1a1612; display: block; text-decoration: none;
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.card:hover { transform: scale(1.015); }
+.card img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: brightness(.72) saturate(.8) contrast(1.08);
+  transition: transform .7s ease, filter .5s ease;
+}
+.card:hover img { transform: scale(1.07); filter: brightness(.98) saturate(1.05) contrast(1); }
+.card-ov {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,7,6,.95) 0%, transparent 60%);
+  opacity: 0; transition: opacity .4s;
+}
+.card:hover .card-ov { opacity: 1; }
+/* Accent bottom line */
+.card-line {
+  position: absolute; bottom: 0; left: 0;
+  width: 0; height: 2px; background: var(--accent);
+  transition: width .5s ease;
+}
+.card:hover .card-line { width: 100%; }
+.card-info {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 22px 22px;
+  transform: translateY(6px); transition: transform .4s;
+}
+.card:hover .card-info { transform: translateY(0); }
+.card-t {
+  font-family: var(--sans); font-size: 15px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: -0.01em;
+  color: var(--white); margin-bottom: 4px;
+}
+.card-m { font-size: 9px; letter-spacing: 0.15em; color: rgba(237,232,224,.4); text-transform: uppercase; }
+
+/* Weddings divider */
+.wed-div { display: flex; align-items: center; gap: 18px; padding: 40px 56px 22px; }
+.wed-line { flex: 1; height: 1px; background: var(--border); }
+.wed-lbl {
+  font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--dim); white-space: nowrap;
+}
+.wed-soon {
+  margin: 0 56px; padding: 13px 18px;
+  border: 1px dashed rgba(200,85,42,0.2);
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(200,85,42,0.45);
+}
+
+/* ── TESTIMONIALS ── */
+.testi {
+  border-top: 1px solid var(--border);
+  padding: 100px 56px; position: relative; overflow: hidden;
+}
+/* Giant decorative initial */
+.testi::before {
+  content: '"';
+  position: absolute; right: 40px; top: 10px;
+  font-family: var(--serif); font-size: 320px; line-height: 1;
+  color: rgba(200,85,42,0.06); pointer-events: none; font-weight: 300;
+}
+.testi-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 72px; }
+.testi-lbl {
+  font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent);
+  display: flex; align-items: center; gap: 12px;
+}
+.testi-lbl::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+.testi-ctr { font-size: 10px; letter-spacing: 0.1em; color: var(--dim); }
+.testi-ctr span { color: var(--muted); }
+.testi-track { position: relative; min-height: 230px; }
+.testi-slide {
+  position: absolute; top: 0; left: 0; right: 0;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .65s ease, transform .65s ease; pointer-events: none;
+}
+.testi-slide.active { opacity: 1; transform: none; pointer-events: auto; position: relative; }
+/* Big bold quote */
+.testi-q {
+  font-family: var(--sans); font-weight: 700;
+  font-size: clamp(22px, 3vw, 36px);
+  color: var(--white); line-height: 1.3;
+  margin-bottom: 36px; max-width: 860px;
+  letter-spacing: -0.02em; text-transform: uppercase;
+}
+.testi-attr { display: flex; align-items: center; gap: 16px; }
+.testi-av {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(200,85,42,0.1); border: 1px solid rgba(200,85,42,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--accent); flex-shrink: 0;
+}
+.testi-name { font-size: 13px; font-weight: 600; color: rgba(237,232,224,.65); }
+.testi-role { font-size: 11px; color: var(--dim); margin-top: 2px; }
+.testi-ft { display: flex; align-items: center; gap: 18px; margin-top: 52px; }
+.testi-dots { display: flex; gap: 10px; flex: 1; }
+.t-dot { height: 1px; flex: 1; max-width: 48px; background: rgba(237,232,224,.08); position: relative; overflow: hidden; }
+.t-dot.active { background: rgba(200,85,42,0.25); }
+.t-dot-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent); }
+.t-dot.active .t-dot-fill { animation: fillBar var(--dur,5s) linear forwards; }
+.testi-btns { display: flex; gap: 8px; }
+.testi-btn {
+  width: 40px; height: 40px; border: 1px solid var(--border); background: transparent;
+  color: var(--muted); font-size: 16px; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s, color .2s, background .2s;
+}
+.testi-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,85,42,0.06); }
+
+/* ── CONTACT ── */
+.contact {
+  border-top: 1px solid var(--border);
+  padding: 96px 56px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  position: relative;
+}
+.contact::before {
+  content: ''; position: absolute; top: -1px; left: 0;
+  width: 100px; height: 2px; background: var(--accent);
+}
+.c-sup {
+  font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 20px;
+  display: flex; align-items: center; gap: 10px;
+}
+.c-sup::after { content: ''; flex: 1; max-width: 32px; height: 1px; background: rgba(200,85,42,0.3); }
+.c-h {
+  font-family: var(--sans); font-size: clamp(36px, 4.5vw, 60px);
+  font-weight: 800; line-height: 0.88;
+  text-transform: uppercase; letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.c-h-sub {
+  font-family: var(--serif); font-size: clamp(36px, 4.8vw, 66px);
+  font-weight: 300; font-style: italic; color: var(--muted);
+  line-height: 1; margin-bottom: 24px;
+}
+.c-sub { font-size: 14px; color: var(--muted); line-height: 1.75; margin-bottom: 36px; max-width: 340px; }
+.c-btn {
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 16px 32px; background: var(--accent);
+  color: var(--white); font-size: 10px; font-family: var(--sans);
+  letter-spacing: 0.22em; text-transform: uppercase; text-decoration: none;
+  font-weight: 700; transition: background .3s, transform .2s;
+}
+.c-btn:hover { background: var(--accent2); transform: translateY(-2px); }
+.c-btn::after { content: '→'; transition: transform .3s; }
+.c-btn:hover::after { transform: translateX(4px); }
+.c-grp { margin-bottom: 28px; }
+.c-grp:last-child { margin-bottom: 0; }
+.c-dl { font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--dim); margin-bottom: 8px; }
+.c-dv { font-size: 15px; color: rgba(237,232,224,.55); text-decoration: none; display: block; transition: color .2s; }
+.c-dv:hover { color: var(--white); }
+.c-socs { display: flex; gap: 24px; }
+.c-soc {
+  font-family: var(--serif); font-style: italic; font-size: 17px;
+  color: var(--muted); text-decoration: none; transition: color .2s;
+  display: flex; align-items: center; gap: 5px;
+}
+.c-soc::after { content: '↗'; font-size: 11px; opacity: .4; font-style: normal; font-family: var(--sans); }
+.c-soc:hover { color: var(--white); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 22px 56px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.f-logo {
+  font-family: var(--sans); font-size: 12px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim);
+}
+.f-copy { font-size: 10px; color: var(--dim); letter-spacing: 0.12em; }
+.f-loc { font-size: 10px; color: var(--dim); letter-spacing: 0.12em; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes scrollPulse { 0%,100%{opacity:.2} 50%{opacity:.9} }
+@keyframes fillBar { from{width:0%} to{width:100%} }
+.reveal { opacity:1; transform:translateY(0); transition:opacity .9s ease, transform .9s ease; }
+.reveal.visible { opacity:1; transform:none; }
+.reveal-d1 { transition-delay:.1s; }
+.reveal-d2 { transition-delay:.2s; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  nav{padding:20px 24px;}
+  .hero-content{padding:0 24px 48px;}
+  .hero-scroll{right:24px;bottom:48px;}
+  .bio{grid-template-columns:1fr;gap:44px;padding:64px 24px;}
+  .bio-right{max-width:300px;}
+  .services{grid-template-columns:1fr;}
+  .svc{border-right:none;border-bottom:1px solid var(--border);padding:28px 24px;}
+  .svc:last-child{border-bottom:none;}
+  .work-head{padding:48px 24px 20px;}
+  .wg,.wg.two{grid-template-columns:1fr 1fr;padding:0 24px;}
+  .wed-div{padding:28px 24px 16px;}.wed-soon{margin:0 24px;}
+  .testi{padding:64px 24px;}.testi::before{display:none;}
+  .contact{grid-template-columns:1fr;gap:44px;padding:64px 24px;}
+  footer{padding:20px 24px;flex-direction:column;gap:8px;text-align:center;}
+}
+</style>
+</head>
+<body>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Oliver Holdsworth</a>
+  <div class="nav-links">
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="nav-cta">Get in touch</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img">
+    <!-- Add your hero background image here once uploaded -->
+    <!-- Replace the src with: images/hero-bg.jpg -->
+    <img src="https://framerusercontent.com/images/QHi79azfQqvOSKR6crwObZxbNY.png" alt="" aria-hidden="true"/>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-scan"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Auckland, New Zealand — Available now</div>
+    <h1 class="hero-title">
+      Oliver
+      <span class="serif-line">Holdsworth</span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-sub">Videographer · Photographer · 3D Artist.<br>Story-driven content for brands and individuals.</p>
+      <div class="hero-meta">
+        <div class="hero-meta-line">Videography <span>/</span> Photography</div>
+        <div class="hero-meta-line">3D + VFX <span>/</span> Weddings</div>
+        <div class="hero-meta-line">Based in <span>Auckland, NZ</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item">Videography<span>·</span></span>
+    <span class="ticker-item">Photography<span>·</span></span>
+    <span class="ticker-item">3D & VFX<span>·</span></span>
+    <span class="ticker-item">Architectural Visualisation<span>·</span></span>
+    <span class="ticker-item">Weddings<span>·</span></span>
+    <span class="ticker-item">Brand Content<span>·</span></span>
+    <span class="ticker-item">Auckland, NZ<span>·</span></span>
+    <span class="ticker-item">Available Now<span>·</span></span>
+    <!-- Duplicate for seamless loop -->
+    <span class="ticker-item">Videography<span>·</span></span>
+    <span class="ticker-item">Photography<span>·</span></span>
+    <span class="ticker-item">3D & VFX<span>·</span></span>
+    <span class="ticker-item">Architectural Visualisation<span>·</span></span>
+    <span class="ticker-item">Weddings<span>·</span></span>
+    <span class="ticker-item">Brand Content<span>·</span></span>
+    <span class="ticker-item">Auckland, NZ<span>·</span></span>
+    <span class="ticker-item">Available Now<span>·</span></span>
+  </div>
+</div>
+
+<!-- BIO -->
+<section class="bio reveal" id="about">
+  <div>
+    <div class="bio-sup">About me</div>
+    <h2 class="bio-h">Hi, I'm Ollie —</h2>
+    <div class="bio-h-sub">I make stuff look good.</div>
+    <div class="bio-body">
+      <p>A Videographer, Photographer, and 3D Artist from Auckland, New Zealand. I specialise in intentional, aesthetic, and story-driven content for brands, businesses and individuals.</p>
+      <p>I've always been a creative person — from drones to hanging out of a car to get the perfect shot.</p>
+    </div>
+    <div class="bio-tags">
+      <span class="bio-tag">Videography</span>
+      <span class="bio-tag">Photography</span>
+      <span class="bio-tag">3D & VFX</span>
+      <span class="bio-tag">Weddings</span>
+      <span class="bio-tag">Auckland, NZ</span>
+    </div>
+  </div>
+  <div class="bio-right">
+    <div class="bio-img">
+      <img src="https://framerusercontent.com/images/DwR0ciMZKQbDnbCR9yHkJKJvyXA.jpg" alt="Oliver Holdsworth" onerror="this.style.display='none'"/>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services reveal">
+  <div class="svc"><div class="svc-n">01</div><div class="svc-t">Videography</div><div class="svc-d">Brand films, car content, events, weddings and social — shot and edited to tell your story.</div></div>
+  <div class="svc"><div class="svc-n">02</div><div class="svc-t">Photography</div><div class="svc-d">Commercial, portrait and event photography. Stills that work as hard as your video content.</div></div>
+  <div class="svc"><div class="svc-n">03</div><div class="svc-t">3D & VFX</div><div class="svc-d">Architectural visualisation, 3D renders, and visual effects — built in Unreal Engine.</div></div>
+</section>
+
+<!-- WORK -->
+<div class="work" id="work">
+  <div class="work-head reveal">
+    <div class="work-head-l"><div class="work-head-t">Videography</div><div class="work-head-c">04 projects</div></div>
+    <div class="work-head-y">2023 – 2025</div>
+  </div>
+  <div class="wg reveal reveal-d1">
+    <a href="redwrx.html" class="card"><img src="https://framerusercontent.com/images/OFGHrIqczI4XmQ1w73cekRtjn8E.jpg" alt="Red WRX" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Red WRX</div><div class="card-m">Video + Photo · 2025</div></div></a>
+    <a href="s4.html" class="card"><img src="https://framerusercontent.com/images/G0i5m5MhisxUtVioEIme3z0Vqs.png" alt="Sam's Audi S4" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Sam's Audi S4</div><div class="card-m">Videography · 2025</div></div></a>
+    <a href="goodcx.html" class="card"><img src="https://framerusercontent.com/images/ynjqXzkequXrjIycLTCMejCVs.jpg" alt="GoodCX Event" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">GoodCX Innovation Event</div><div class="card-m">Video + Photo · 2025</div></div></a>
+    <a href="seb.html" class="card"><img src="https://framerusercontent.com/images/7v4yk9Z31HKTcgfpewTuUM4XCAI.jpg" alt="Builtby.seb" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Builtby.seb</div><div class="card-m">Video + Photo · 2025</div></div></a>
+  </div>
+
+  <div class="wed-div reveal"><div class="wed-line"></div><div class="wed-lbl">Weddings</div><div class="wed-line"></div></div>
+  <div class="wed-soon reveal">Coming soon — wedding work dropping here</div>
+
+  <div class="work-head reveal" style="padding-top:72px;">
+    <div class="work-head-l"><div class="work-head-t">Photography</div><div class="work-head-c">02 projects</div></div>
+    <div class="work-head-y">2023 – 2025</div>
+  </div>
+  <div class="wg two reveal reveal-d1">
+    <a href="nicole.html" class="card"><img src="https://framerusercontent.com/images/WKNyMuc9s4xBVZZw0cqU0JPME.jpg" alt="Nicole Homeopath" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Nicole Homeopath</div><div class="card-m">Photography · 2025</div></div></a>
+    <a href="seb.html" class="card"><img src="https://framerusercontent.com/images/7v4yk9Z31HKTcgfpewTuUM4XCAI.jpg" alt="Builtby.seb" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Builtby.seb</div><div class="card-m">Photography · 2025</div></div></a>
+  </div>
+
+  <div class="work-head reveal" style="padding-top:72px;">
+    <div class="work-head-l"><div class="work-head-t">3D / VFX</div><div class="work-head-c">02 projects</div></div>
+    <div class="work-head-y">2023 – 2025</div>
+  </div>
+  <div class="wg two reveal reveal-d1" style="padding-bottom:88px;">
+    <a href="maloneys.html" class="card"><img src="https://framerusercontent.com/images/5FRK5XdXBZU9w0hcSIm2lMPM0E.png" alt="Maloney's Barbershop" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Maloney's Barbershop</div><div class="card-m">Video + 3D · 2025</div></div></a>
+    <a href="vfx.html" class="card"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Architectural Visualisation</div><div class="card-m">Unreal Engine · 2025</div></div></a>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testi reveal">
+  <div class="testi-hd">
+    <div class="testi-lbl">What clients say</div>
+    <div class="testi-ctr"><span id="tc">1</span> / <span id="tt"></span></div>
+  </div>
+  <div class="testi-track">
+    <div class="testi-slide active">
+      <div class="testi-q">Oliver showed up, got amongst it and made the content and got it live. Portfolio — music to my ears!!!</div>
+      <div class="testi-attr"><div class="testi-av">EP</div><div><div class="testi-name">Elizabeth Pinfold Reed</div><div class="testi-role">Founder · GoodCX</div></div></div>
+    </div>
+    <div class="testi-slide">
+      <div class="testi-q">Banger video bro. So cool!</div>
+      <div class="testi-attr"><div class="testi-av">MM</div><div><div class="testi-name">Matthew Moulds</div><div class="testi-role">Client</div></div></div>
+    </div>
+    <div class="testi-slide">
+      <div class="testi-q">I love having videos — I feel like the day went so fast, it's nice to relive and remember everything.</div>
+      <div class="testi-attr"><div class="testi-av">TR</div><div><div class="testi-name">Tessa Ranger</div><div class="testi-role">Wedding client</div></div></div>
+    </div>
+  </div>
+  <div class="testi-ft">
+    <div class="testi-dots" id="tdots"></div>
+    <div class="testi-btns">
+      <button class="testi-btn" id="tprev">←</button>
+      <button class="testi-btn" id="tnext">→</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact reveal" id="contact">
+  <div>
+    <div class="c-sup">Get in touch</div>
+    <div class="c-h">Let's make</div>
+    <div class="c-h-sub">something great.</div>
+    <p class="c-sub">Based in Auckland, available for projects across New Zealand and beyond. Always up for a chat about what you're building.</p>
+    <a href="/cdn-cgi/l/email-protection#3a555656535f52020a7a5d575b535614595557" class="c-btn">Send a message </a>
+  </div>
+  <div>
+    <div class="c-grp"><div class="c-dl">Email</div><a href="/cdn-cgi/l/email-protection#bdd2d1d1d4d8d5858dfddad0dcd4d193ded2d0" class="c-dv"><span class="__cf_email__" data-cfemail="056a69696c606d3d35456268646c692b666a68">[email&#160;protected]</span></a></div>
+    <div class="c-grp"><div class="c-dl">Phone</div><a href="tel:0278671000" class="c-dv">027 867 1000</a></div>
+    <div class="c-grp"><div class="c-dl">Follow</div><div class="c-socs"><a href="https://www.instagram.com/0lliefx/" class="c-soc" target="_blank">Instagram</a><a href="https://www.linkedin.com/in/ollieh80/" class="c-soc" target="_blank">LinkedIn</a></div></div>
+    <div class="c-grp"><div class="c-dl">Based in</div><span class="c-dv" style="cursor:default;">Auckland, New Zealand</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">Oliver Holdsworth</div>
+  <div class="f-copy">© 2025 Oliver Holdsworth</div>
+  <div class="f-loc">Auckland, NZ</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// Cursor
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function a(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Testimonials
+const slides=document.querySelectorAll('.testi-slide');
+const dotsWrap=document.getElementById('tdots');
+const tcEl=document.getElementById('tc'),ttEl=document.getElementById('tt');
+const DUR=5000; let cur2=0,timer=null;
+ttEl.textContent=slides.length;
+slides.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='t-dot'+(i===0?' active':'');
+  d.innerHTML='<div class="t-dot-fill"></div>';
+  d.style.setProperty('--dur',DUR+'ms');
+  d.addEventListener('click',()=>goTo(i));
+  dotsWrap.appendChild(d);
+});
+const getDots=()=>document.querySelectorAll('.t-dot');
+function goTo(n){
+  clearTimeout(timer);
+  slides[cur2].classList.remove('active');
+  const od=getDots()[cur2];const nd=od.cloneNode(true);
+  nd.addEventListener('click',()=>goTo(cur2));od.parentNode.replaceChild(nd,od);
+  cur2=(n+slides.length)%slides.length;
+  slides[cur2].classList.add('active');
+  tcEl.textContent=cur2+1;
+  const ad=getDots()[cur2];ad.classList.add('active');
+  ad.style.setPrope

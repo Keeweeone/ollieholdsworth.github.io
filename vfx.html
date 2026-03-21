@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architectural Visualisation — Oliver Holdsworth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Syne:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root{--black:#0a0908;--white:#ede8e0;--accent:#c8552a;--accent-light:#e8714a;--muted:rgba(237,232,224,0.5);--dim:rgba(237,232,224,0.2);--border:rgba(237,232,224,0.07);--sans:'Syne',sans-serif;--serif:'Cormorant Garamond',serif;}
+html{scroll-behavior:smooth;}
+body{cursor:auto;background:var(--black);color:var(--white);font-family:var(--sans);font-weight:300;overflow-x:hidden;}
+#cur{position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+#cur-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(200,85,42,0.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+
+#cur{position:fixed;width:6px;height:6px;background:var(--white);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cur-ring{position:fixed;width:32px;height:32px;border:1px solid rgba(237,232,224,0.25);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:32px 60px;background:linear-gradient(to bottom,rgba(10,9,8,0.97),transparent);}
+.nav-logo{font-family:var(--serif);font-size:22px;font-weight:300;color:var(--white);text-decoration:none;letter-spacing:0.05em;}
+.nav-back{font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:10px;transition:color .2s;}
+.nav-back::before{content:'';display:block;width:24px;height:1px;background:currentColor;transition:width .3s;}
+.nav-back:hover{color:var(--white);}
+.nav-back:hover::before{width:40px;}
+/* Hero — centred video frame */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(135deg,#0d1015,#0a0908);}
+.hero-bg img{width:100%;height:100%;object-fit:cover;opacity:0.35;filter:grayscale(20%);}
+.hero-glow{position:absolute;inset:-20%;background:radial-gradient(ellipse at 50% 60%,rgba(200,85,42,0.06) 0%,transparent 55%);}
+.hero-lines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(237,232,224,0.01) 2px,rgba(237,232,224,0.01) 4px);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,9,8,0.98) 0%,rgba(10,9,8,0.25) 50%,rgba(10,9,8,0.6) 100%);}
+.video-frame{position:relative;width:82%;max-width:1000px;aspect-ratio:16/9;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,0.85),0 0 0 1px rgba(237,232,224,0.04);z-index:2;opacity:0;transform:scale(0.96);animation:videoReveal 1.1s .4s cubic-bezier(.16,1,.3,1) forwards;}
+.video-frame iframe{width:100%;height:100%;border:none;display:block;}
+.frame-title{position:absolute;bottom:24px;left:28px;z-index:3;opacity:0;animation:fadeUp .6s .5s forwards;}
+.frame-eyebrow{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);opacity:.8;margin-bottom:6px;}
+.frame-name{font-family:var(--serif);font-size:clamp(26px,3.5vw,44px);font-weight:300;line-height:1;letter-spacing:0.02em;}
+.timecode{position:absolute;bottom:24px;right:28px;z-index:3;font-size:10px;font-family:monospace;letter-spacing:0.12em;color:rgba(200,85,42,0.4);opacity:0;animation:fadeUp .6s .7s forwards;}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:10;opacity:0;animation:fadeUp .6s 1.1s forwards;}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollPulse 2.2s ease-in-out infinite;}
+.hero-scroll span{font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:var(--dim);}
+/* Info bar */
+.info-bar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.info-item{padding:28px 52px;border-right:1px solid var(--border);}
+.info-item:last-child{border-right:none;}
+.info-label{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.info-value{font-size:14px;font-weight:400;color:var(--white);font-family:var(--sans);}
+/* Content */
+.content{max-width:1100px;margin:0 auto;padding:0 60px;}
+.about{padding:88px 0 72px;display:grid;grid-template-columns:160px 1fr;gap:56px;align-items:start;border-bottom:1px solid var(--border);}
+.about-label{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);padding-top:4px;}
+.about-text{font-size:clamp(16px,1.8vw,22px);line-height:1.75;color:var(--muted);font-family:var(--serif);font-weight:300;}
+.about-text p+p{margin-top:1.1em;}
+/* Breakdown */
+.breakdown{padding:72px 0;border-bottom:1px solid var(--border);}
+.section-label{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--dim);margin-bottom:36px;}
+.chapter{display:grid;grid-template-columns:72px 1fr 120px;align-items:center;gap:28px;padding:20px 0;border-bottom:1px solid var(--border);transition:background .25s;}
+.chapter:last-child{border-bottom:none;}
+.chapter:hover{background:rgba(200,85,42,0.03);margin:0 -16px;padding:20px 16px;}
+.ch-num{font-size:11px;letter-spacing:0.1em;color:var(--dim);font-family:monospace;}
+.ch-title{font-family:var(--serif);font-size:17px;font-weight:300;color:var(--white);}
+.ch-title small{display:block;font-size:12px;color:var(--muted);margin-top:3px;font-family:var(--sans);font-weight:300;}
+.ch-dur{font-size:11px;letter-spacing:0.08em;color:var(--dim);font-family:monospace;text-align:right;}
+/* Stills */
+.stills{padding:72px 0;border-bottom:1px solid var(--border);}
+.stills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.still{aspect-ratio:16/9;overflow:hidden;background:#1a1612;transition:transform .4s cubic-bezier(.16,1,.3,1);}
+.still:hover{transform:scale(1.02);}
+.still img{width:100%;height:100%;object-fit:cover;filter:brightness(.85);transition:filter .4s;}
+.still:hover img{filter:brightness(1);}
+/* Specs */
+.specs{padding:72px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:160px 1fr;gap:56px;}
+.specs-label{font-size:9px;letter-spacing:0.25em;text-transform:uppercase;color:var(--accent);padding-top:4px;}
+.specs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
+.spec-key{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--dim);margin-bottom:7px;}
+.spec-val{font-size:14px;font-weight:400;color:var(--white);line-height:1.4;}
+/* CTA */
+.cta-section{padding:88px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:32px;}
+.cta-text{font-family:var(--serif);font-size:clamp(40px,5.5vw,70px);font-weight:300;line-height:0.95;letter-spacing:0.01em;}
+.cta-text em{font-style:italic;color:var(--muted);}
+.cta-btn{display:inline-flex;align-items:center;gap:14px;padding:16px 32px;background:var(--accent);color:var(--white);font-size:10px;font-family:var(--sans);letter-spacing:0.22em;text-transform:uppercase;text-decoration:none;font-weight:500;transition:background .3s,transform .2s;}
+.cta-btn:hover{background:var(--accent-light);transform:translateY(-2px);}
+/* Next */
+.next-project{border-top:1px solid var(--border);padding:48px 60px;display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:var(--white);transition:background .3s;}
+.next-project:hover{background:rgba(200,85,42,0.03);}
+.next-label{font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.next-title{font-family:var(--serif);font-size:clamp(32px,4vw,52px);font-weight:300;letter-spacing:0.02em;transition:letter-spacing .4s;}
+.next-project:hover .next-title{letter-spacing:0.05em;}
+.next-arrow{font-size:28px;color:var(--accent);transition:transform .3s;}
+.next-project:hover .next-arrow{transform:translateX(8px);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes videoReveal{to{opacity:1;transform:scale(1)}}
+@keyframes scrollPulse{0%,100%{opacity:.25}50%{opacity:.9}}
+.reveal{opacity:1;transform:translateY(0);transition:opacity .9s ease,transform .9s ease;}
+.reveal.visible{opacity:1;transform:none;}
+@media(max-width:768px){nav{padding:20px 24px;}.video-frame{width:96%;}.hero-scroll{display:none;}.info-bar{grid-template-columns:repeat(2,1fr);}.info-item{padding:20px 24px;}.content{padding:0 24px;}.about,.specs{grid-template-columns:1fr;gap:20px;padding:56px 0 40px;}.stills-grid{grid-template-columns:repeat(2,1fr);}.specs-grid{grid-template-columns:repeat(2,1fr);}.chapter{grid-template-columns:48px 1fr 80px;gap:16px;}.cta-section{flex-direction:column;align-items:flex-start;}.next-project{padding:36px 24px;}}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="cur-ring"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Oliver Holdsworth</a>
+  <a href="index.html#work" class="nav-back">All work</a>
+</nav>
+
+<!-- Hero with centred video -->
+<section class="hero">
+  <div class="hero-bg"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation" onerror="this.style.opacity='0'"/></div>
+  <div class="hero-glow"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-overlay"></div>
+  <div class="video-frame">
+    <!-- Replace YOUR_VIDEO_ID with your actual YouTube video ID -->
+    <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID?color=white&title=0&byline=0&portrait=0" allowfullscreen></iframe>
+  </div>
+  <div class="frame-title">
+    <div class="frame-eyebrow">3D / VFX · Unreal Engine · 2025</div>
+    <div class="frame-name">Architectural Visualisation</div>
+  </div>
+  <div class="timecode" id="tc">00:00:00:00</div>
+  <div class="hero-scroll"><div class="scroll-line"></div><span>Scroll</span></div>
+</section>
+
+<!-- Info bar -->
+<div class="info-bar reveal">
+  <div class="info-item"><div class="info-label">Type</div><div class="info-value">Arch. Visualisation</div></div>
+  <div class="info-item"><div class="info-label">Engine</div><div class="info-value">Unreal Engine 5</div></div>
+  <div class="info-item"><div class="info-label">Year</div><div class="info-value">2025</div></div>
+  <div class="info-item"><div class="info-label">Grade</div><div class="info-value">DaVinci Resolve</div></div>
+</div>
+
+<div class="content">
+  <!-- About -->
+  <div class="about reveal">
+    <div class="about-label">About</div>
+    <div class="about-text">
+      <p>A fully real-time architectural visualisation built in Unreal Engine 5 — designed to communicate spatial quality, materiality, and light before a single brick is laid.</p>
+      <p>Graded and finished in DaVinci Resolve to give the final film the same cinematic feel as the live-action work.</p>
+    </div>
+  </div>
+
+  <!-- Breakdown -->
+  <div class="breakdown reveal">
+    <div class="section-label">Film breakdown</div>
+    <div class="chapter">
+      <div class="ch-num">01</div>
+      <div class="ch-title">Exterior approach<small>Wide establishing shots, materiality and massing</small></div>
+      <div class="ch-dur">0:00 – 0:30</div>
+    </div>
+    <div class="chapter">
+      <div class="ch-num">02</div>
+      <div class="ch-title">Interior walkthrough<small>Spatial sequence, light and atmosphere</small></div>
+      <div class="ch-dur">0:30 – 1:10</div>
+    </div>
+    <div class="chapter">
+      <div class="ch-num">03</div>
+      <div class="ch-title">Detail pass<small>Materials, joinery, landscape close-ups</small></div>
+      <div class="ch-dur">1:10 – 1:40</div>
+    </div>
+    <div class="chapter">
+      <div class="ch-num">04</div>
+      <div class="ch-title">Golden hour outro<small>Exterior lighting, final wide pull</small></div>
+      <div class="ch-dur">1:40 – 2:10</div>
+    </div>
+  </div>
+
+  <!-- Stills -->
+  <div class="stills reveal">
+    <div class="section-label">Stills from the visualisation</div>
+    <div class="stills-grid">
+      <div class="still"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation"/></div>
+      <div class="still"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation"/></div>
+      <div class="still"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation"/></div>
+      <div class="still"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation"/></div>
+      <div class="still"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation"/></div>
+      <div class="still"><img src="https://framerusercontent.com/images/CK3yMPo7oPzLIE5ARUsnkSMfQ0k.png" alt="Architectural Visualisation"/></div>
+    </div>
+  </div>
+
+  <!-- Specs -->
+  <div class="specs reveal">
+    <div class="specs-label">Production</div>
+    <div class="specs-grid">
+      <div><div class="spec-key">Engine</div><div class="spec-val">Unreal Engine 5</div></div>
+      <div><div class="spec-key">Rendering</div><div class="spec-val">Lumen + Nanite</div></div>
+      <div><div class="spec-key">Grade</div><div class="spec-val">DaVinci Resolve</div></div>
+      <div><div class="spec-key">Format</div><div class="spec-val">4K ProRes</div></div>
+      <div><div class="spec-key">Delivery</div><div class="spec-val">4K H.265 + YouTube</div></div>
+      <div><div class="spec-key">Type</div><div class="spec-val">Real-time render</div></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section reveal">
+    <div class="cta-text">Need a visualisation<br>for your <em>project?</em></div>
+    <a href="/cdn-cgi/l/email-protection#fe919292979b96c6cebe99939f9792d09d9193" class="cta-btn">Let's talk →</a>
+  </div>
+</div>
+
+<!-- Next project -->
+<a href="redwrx.html" class="next-project reveal">
+  <div><div class="next-label">Back to start</div><div class="next-title">Red WRX</div></div>
+  <div class="next-arrow">→</div>
+</a>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function a(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const tc=document.getElementById('tc');
+let f=0;
+setInterval(()=>{f++;const fr=f%25,s=Math.floor(f/25)%60,m=Math.floor(f/15
