@@ -219,6 +219,27 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
   .contact{grid-template-columns:1fr;gap:44px;padding:68px 24px;}
   footer{padding:18px 24px;flex-direction:column;gap:8px;text-align:center;}
 }
+
+.nav-link{font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
+.nav-link:hover{color:var(--white);}
+.nav-cta{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);text-decoration:none;padding:10px 22px;border:1px solid rgba(200,85,42,0.4);transition:background .3s,color .3s;}
+.nav-cta:hover{background:var(--accent);color:var(--white);}
+.nav-dropdown{position:relative;}
+.nav-dropdown:hover .nav-drop-menu{opacity:1;transform:translateY(0);pointer-events:auto;}
+.nav-drop-menu{
+  position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%) translateY(-8px);
+  background:rgba(10,9,8,0.97);border:1px solid var(--border);
+  min-width:160px;opacity:0;pointer-events:none;
+  transition:opacity .25s ease,transform .25s ease;
+  padding:8px 0;
+}
+.drop-item{
+  display:block;padding:10px 20px;
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+  transition:color .2s,background .2s;white-space:nowrap;
+}
+.drop-item:hover{color:var(--white);background:rgba(200,85,42,0.06);}
 </style>
 </head>
 <body>
@@ -226,9 +247,18 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
 <nav>
   <a href="/" class="nav-logo">Oliver Holdsworth</a>
   <div style="display:flex;gap:44px;align-items:center;">
-    <a href="#work" style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Work</a>
-    <a href="#about" style="font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">About</a>
-    <a href="#contact" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);text-decoration:none;padding:10px 22px;border:1px solid rgba(200,85,42,0.4);transition:background .3s,color .3s;" onmouseover="this.style.background='var(--accent)';this.style.color='var(--white)'" onmouseout="this.style.background='transparent';this.style.color='var(--accent)'">Get in touch</a>
+    <div class="nav-dropdown">
+      <a href="#work" class="nav-link">Work</a>
+      <div class="nav-drop-menu">
+        <a href="#work" class="drop-item">Videography</a>
+        <a href="#weddings" class="drop-item">Weddings</a>
+        <a href="#social" class="drop-item">Social Media</a>
+        <a href="#photography" class="drop-item">Photography</a>
+        <a href="#threed" class="drop-item">3D / VFX</a>
+      </div>
+    </div>
+    <a href="#about" class="nav-link">About</a>
+    <a href="#contact" class="nav-cta">Get in touch</a>
   </div>
 </nav>
 
@@ -277,7 +307,7 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
   </div>
   <div class="bio-right">
     <div class="bio-img">
-      <img src="https://framerusercontent.com/images/DwR0ciMZKQbDnbCR9yHkJKJvyXA.jpg" alt="Oliver Holdsworth" onerror="this.style.display='none'"/>
+      <img src="Images/ollie-profile.jpeg" alt="Oliver Holdsworth" onerror="this.style.opacity='0'"/>
     </div>
   </div>
 </section>
@@ -293,6 +323,7 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
 <div class="work-sec" id="work">
 
   <!-- VIDEOGRAPHY -->
+  <div id="work-anchor" style="position:relative;top:-80px;"></div>
   <div class="work-hd">
     <div class="work-hd-l"><div class="work-hd-t">Videography</div><div class="work-hd-c">08 projects</div></div>
     <div class="work-hd-y">2023 – 2025</div>
@@ -308,6 +339,7 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
     <a href="redwrx.html" class="card"><img src="https://framerusercontent.com/images/OFGHrIqczI4XmQ1w73cekRtjn8E.jpg" alt="Red WRX" onerror="this.parentNode.querySelector('.card-ph') && (this.style.display='none')"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Red WRX</div><div class="card-m">Video + Photo · 2025</div></div></a>
   </div>
 
+  <div id="weddings" style="position:relative;top:-80px;"></div>
   <!-- WEDDINGS -->
   <div class="wed-div"><div class="wed-line"></div><div class="wed-lbl">Weddings</div><div class="wed-line"></div></div>
   <div class="wg two" style="padding-top:4px;">
@@ -316,6 +348,7 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
   </div>
 
 
+  <div id="social" style="position:relative;top:-80px;"></div>
   <!-- SOCIAL MEDIA -->
   <div class="work-hd" style="padding-top:72px;">
     <div class="work-hd-l"><div class="work-hd-t">Social Media</div><div class="work-hd-c">01 project</div></div>
@@ -325,6 +358,7 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
     <a href="social-media.html" class="card"><img src="https://img.youtube.com/vi/K_EuygirdQw/maxresdefault.jpg" alt="Social Media Content" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Social Media Content</div><div class="card-m">Social Media · 2026</div></div></a>
   </div>
 
+  <div id="photography" style="position:relative;top:-80px;"></div>
   <!-- PHOTOGRAPHY -->
   <div class="work-hd" style="padding-top:72px;">
     <div class="work-hd-l"><div class="work-hd-t">Photography</div><div class="work-hd-c">04 projects</div></div>
@@ -337,6 +371,7 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
     <a href="savor.html" class="card"><img src="Images/Savor-01.jpg" alt="Savor" onerror="this.style.background='#1a1612'"/><div class="card-ov"></div><div class="card-line"></div><div class="card-info"><div class="card-t">Savor</div><div class="card-m">Photography · 2026</div></div></a>
   </div>
 
+  <div id="threed" style="position:relative;top:-80px;"></div>
   <!-- 3D / VFX -->
   <div class="work-hd" style="padding-top:72px;">
     <div class="work-hd-l"><div class="work-hd-t">3D / VFX</div><div class="work-hd-c">02 projects</div></div>
