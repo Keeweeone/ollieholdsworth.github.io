@@ -224,13 +224,13 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
 .nav-link:hover{color:var(--white);}
 .nav-cta{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent);text-decoration:none;padding:10px 22px;border:1px solid rgba(200,85,42,0.4);transition:background .3s,color .3s;}
 .nav-cta:hover{background:var(--accent);color:var(--white);}
-.nav-dropdown{position:relative;}
-.nav-dropdown:hover .nav-drop-menu{opacity:1;transform:translateY(0);pointer-events:auto;}
+.nav-dropdown{position:relative;padding-bottom:20px;margin-bottom:-20px;}
+.nav-dropdown:hover .nav-drop-menu{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
 .nav-drop-menu{
-  position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%) translateY(-8px);
+  position:absolute;top:calc(100% - 12px);left:50%;transform:translateX(-50%) translateY(-8px);
   background:rgba(10,9,8,0.97);border:1px solid var(--border);
   min-width:160px;opacity:0;pointer-events:none;
-  transition:opacity .25s ease,transform .25s ease;
+  transition:opacity .2s ease,transform .2s ease;
   padding:8px 0;
 }
 .drop-item{
@@ -307,7 +307,7 @@ footer{border-top:1px solid var(--border);padding:22px 60px;display:flex;justify
   </div>
   <div class="bio-right">
     <div class="bio-img">
-      <img src="Images/ollie-profile.jpeg" alt="Oliver Holdsworth" onerror="this.style.opacity='0'"/>
+      <img src="Images/ollie-profile.JPEG" alt="Oliver Holdsworth" onerror="this.style.opacity='0'"/>
     </div>
   </div>
 </section>
